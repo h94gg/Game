@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Development Quiz - 47 Questions</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px; background: #0F172A; direction: ltr; }
+    .container { max-width: 800px; margin: auto; padding-bottom: 100px; }
+    #scoreBox { background: linear-gradient(135deg, #0072ff, #00c6ff); color: white; padding: 15px; text-align: center; font-size: 20px; position: sticky; top: 10px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; border-bottom-left-radius: 20px; border-top-right-radius: 20px; }
+    .question-card { background: white; padding: 20px; margin-bottom: 20px; box-shadow: 12px 12px 20px -10px rgba(0, 198, 255, 0.7), -12px 12px 20px -10px rgba(0, 114, 255, 0.7), 0px 20px 30px -10px rgba(0, 114, 255, 0.4); border-bottom-left-radius: 20px; border-top-right-radius: 20px; }
+    .q-text { font-size: 18px; font-weight: 600; color: #1c1e21; margin-bottom: 15px; }
+    .translate-btn { background: #34a853; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-bottom: 10px; }
+    .translation-area { display: none; background: #e8f5e9; padding: 10px; border-radius: 8px; margin-bottom: 15px; direction: rtl; text-align: right; border-right: 4px solid #34a853; }
+    .option { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #dadce0; border-radius: 8px; background: #fff; text-align: left; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+    .option:hover { background: #f8f9fa; border-color: #1a73e8; }
+    .ar-opt { display: none; font-size: 14px; color: #5f6368; margin-top: 4px; direction: rtl; text-align: right; }
+    .correct { background: #d4edda !important; border-color: #28a745 !important; }
+    .wrong { background: #f8d7da !important; border-color: #dc3545 !important; }
+    .result-msg { margin-top: 15px; font-weight: bold; direction: rtl; text-align: right; }
+    h2 { text-align: center; color: #1a73e8; }
+    .footer { position: fixed; bottom: 0; left: 0; width: 100%; background: linear-gradient(135deg, #0072ff, #00c6ff); color: white; text-align: center; padding: 12px; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+    .footer a { text-decoration: none; color: white; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div id="scoreBox">النتيجة: 0 / 47</div>
+    <h2> هندسة وتطوير الألعاب <h2>
+    <div id="quiz-container"></div>
+</div>
+
+<div class="footer">
+    Developed by <a href="https://www.instagram.com/h94g/" target="_blank">حيدر الخفاجي</a>
+</div>
+
+<script>
+const questions = [
+    // Section 1: Multiple Choice (1-25)
+    { q: "What is the primary software used by programmers to control game behavior and graphics?", arQ: "ما هو البرنامج الأساسي الذي يستخدمه المبرمجون للتحكم في سلوك اللعبة والرسوميات؟", options: [
+        { en: "Web Browser", ar: "متصفح الويب", correct: false },
+        { en: "Game Engine", ar: "محرك الألعاب", correct: true },
+        { en: "Spreadsheet", ar: "جداول البيانات", correct: false },
+        { en: "Media Player", ar: "مشغل الوسائط", correct: false }
+    ]},
+    { q: "Which task is NOT usually handled by a game engine?", arQ: "أي مهمة لا يتم التعامل معها عادة بواسطة محرك الألعاب؟", options: [
+        { en: "Rendering graphics", ar: "صيرورة الرسوميات", correct: false },
+        { en: "Managing game states", ar: "إدارة حالات اللعبة", correct: false },
+        { en: "Handling player input", ar: "التعامل مع مدخلات اللاعب", correct: false },
+        { en: "Writing the game's story script", ar: "كتابة سيناريو قصة اللعبة", correct: true }
+    ]},
+    { q: "Programming games that use three-dimensional graphics is called:", arQ: "برمجة الألعاب التي تستخدم رسومات ثلاثية الأبعاد تسمى:", options: [
+        { en: "2D Programming", ar: "برمجة ثنائية الأبعاد", correct: false },
+        { en: "AI Programming", ar: "برمجة الذكاء الاصطناعي", correct: false },
+        { en: "3D Programming", ar: "برمجة ثلاثية الأبعاد", correct: true },
+        { en: "Physics Programming", ar: "برمجة الفيزياء", correct: false }
+    ]},
+    { q: "Which programming language is widely used for game development?", arQ: "أي لغة برمجة تستخدم على نطاق واسع في تطوير الألعاب؟", options: [
+        { en: "HTML", ar: "HTML", correct: false },
+        { en: "C++", ar: "C++", correct: true },
+        { en: "CSS", ar: "CSS", correct: false },
+        { en: "SQL", ar: "SQL", correct: false }
+    ]},
+    { q: "The stage where the actual coding and asset creation happens is:", arQ: "المرحلة التي يتم فيها الترميز الفعلي وإنشاء الأصول هي:", options: [
+        { en: "Pre-production", ar: "ما قبل الإنتاج", correct: false },
+        { en: "Concept", ar: "المفهوم", correct: false },
+        { en: "Production", ar: "الإنتاج", correct: true },
+        { en: "Post-production", ar: "ما بعد الإنتاج", correct: false }
+    ]},
+    { q: "The overall experience and 'fun' factor of a game is known as:", arQ: "التجربة الكلية وعامل 'المتعة' في اللعبة يعرف بـ:", options: [
+        { en: "Mechanics", ar: "الميكانيكا", correct: false },
+        { en: "Gameplay", ar: "أسلوب اللعب", correct: true },
+        { en: "Graphics", ar: "الرسوميات", correct: false },
+        { en: "Hardware", ar: "العتاد", correct: false }
+    ]},
+    { q: "Specific systems like 'jumping' or 'health points' are examples of:", arQ: "الأنظمة المحددة مثل 'القفز' أو 'نقاط الصحة' هي أمثلة على:", options: [
+        { en: "Game Mechanics", ar: "ميكانيكا اللعبة", correct: true },
+        { en: "Game Story", ar: "قصة اللعبة", correct: false },
+        { en: "Game Marketing", ar: "تسويق اللعبة", correct: false },
+        { en: "Game Console", ar: "منصة اللعبة", correct: false }
+    ]},
+    { q: "Game rules must be:", arQ: "يجب أن تكون قواعد اللعبة:", options: [
+        { en: "Changing constantly", ar: "متغيرة باستمرار", correct: false },
+        { en: "Secret from the player", ar: "سرية عن اللاعب", correct: false },
+        { en: "Fixed and clear", ar: "ثابتة وواضحة", correct: true },
+        { en: "Optional", ar: "اختيارية", correct: false }
+    ]},
+    { q: "Which of the following is considered a 'Game Feeling' (Aesthetics)?", arQ: "أي مما يلي يعتبر من 'أحاسيس اللعبة' (الجماليات)؟", options: [
+        { en: "RAM usage", ar: "استخدام الرام", correct: false },
+        { en: "Discovery", ar: "الاكتشاف", correct: true },
+        { en: "Screen Resolution", ar: "دقة الشاشة", correct: false },
+        { en: "CPU Speed", ar: "سرعة المعالج", correct: false }
+    ]},
+    { q: "The 'Fellowship' feeling in games refers to:", arQ: "إحساس 'الزمالة' في الألعاب يشير إلى:", options: [
+        { en: "Playing alone", ar: "اللعب بمفردك", correct: false },
+        { en: "Social interaction and teamwork", ar: "التفاعل الاجتماعي والعمل الجماعي", correct: true },
+        { en: "Breaking the rules", ar: "كسر القواعد", correct: false },
+        { en: "Defeating the final boss", ar: "هزيمة الزعيم الأخير", correct: false }
+    ]},
+    { q: "Determining when two objects in a game touch each other is called:", arQ: "تحديد متى يلمس جمان بعضهما البعض في اللعبة يسمى:", options: [
+        { en: "Rasterization", ar: "التنقيط", correct: false },
+        { en: "Collision Detection", ar: "كشف التصادم", correct: true },
+        { en: "Ray Tracing", ar: "تتبع الأشعة", correct: false },
+        { en: "Keyframing", ar: "تحديد الإطارات المفتاحية", correct: false }
+    ]},
+    { q: "Newton's Second Law of Motion is represented by the formula:", arQ: "قانون نيوتن الثاني للحركة يتم تمثيله بالصيغة:", options: [
+        { en: "E = mc^2", ar: "E = mc^2", correct: false },
+        { en: "a^2 + b^2 = c^2", ar: "a^2 + b^2 = c^2", correct: false },
+        { en: "F = ma", ar: "F = ma", correct: true },
+        { en: "V = IR", ar: "V = IR", correct: false }
+    ]},
+    { q: "Which physics simulation handles the movement of liquids like water?", arQ: "أي محاكاة فيزيائية تتعامل مع حركة السوائل مثل الماء؟", options: [
+        { en: "Cloth simulation", ar: "محاكاة القماش", correct: false },
+        { en: "Rigid body dynamics", ar: "ديناميكا الأجسام الصلبة", correct: false },
+        { en: "Fluid dynamics", ar: "ديناميكا السوائل", correct: true },
+        { en: "Soft body dynamics", ar: "ديناميكا الأجسام اللينة", correct: false }
+    ]},
+    { q: "The tendency of an object to resist changes in its state of motion is:", arQ: "ميل الجسم لمقاومة التغييرات في حالة حركته هو:", options: [
+        { en: "Gravity", ar: "الجاذبية", correct: false },
+        { en: "Friction", ar: "الاحتكاك", correct: false },
+        { en: "Inertia", ar: "القصور الذاتي", correct: true },
+        { en: "Velocity", ar: "السرعة المتجهة", correct: false }
+    ]},
+    { q: "Which of the following is a famous Physics Engine?", arQ: "أي مما يلي هو محرك فيزياء مشهور؟", options: [
+        { en: "Photoshop", ar: "فوتوشوب", correct: false },
+        { en: "Havok", ar: "Havok", correct: true },
+        { en: "Excel", ar: "إكسل", correct: false },
+        { en: "Chrome", ar: "كروم", correct: false }
+    ]},
+    { q: "The smallest unit of a digital image is a:", arQ: "أصغر وحدة في الصورة الرقمية هي:", options: [
+        { en: "Byte", ar: "بايت", correct: false },
+        { en: "Vector", ar: "متجه", correct: false },
+        { en: "Pixel", ar: "بكسل", correct: true },
+        { en: "Grid", ar: "شبكة", correct: false }
+    ]},
+    { q: "In the RGB model, (255, 255, 255) represents which color?", arQ: "في نظام RGB، القيمة (255, 255, 255) تمثل أي لون؟", options: [
+        { en: "Black", ar: "أسود", correct: false },
+        { en: "Red", ar: "أحمر", correct: false },
+        { en: "Blue", ar: "أزرق", correct: false },
+        { en: "White", ar: "أبيض", correct: true }
+    ]},
+    { q: "A screen resolution of 1920x1080 is commonly known as:", arQ: "دقة الشاشة 1920x1080 تعرف عادة بـ:", options: [
+        { en: "4K", ar: "4K", correct: false },
+        { en: "Full HD", ar: "Full HD", correct: true },
+        { en: "VGA", ar: "VGA", correct: false },
+        { en: "8K", ar: "8K", correct: false }
+    ]},
+    { q: "The ratio of width to height (e.g., 16:9) is called:", arQ: "نسبة العرض إلى الارتفاع (مثلاً 16:9) تسمى:", options: [
+        { en: "Pixel Density", ar: "كثافة البكسل", correct: false },
+        { en: "Frame Rate", ar: "معدل الإطارات", correct: false },
+        { en: "Aspect Ratio", ar: "نسبة الجوانب", correct: true },
+        { en: "Refresh Rate", ar: "معدل التحديث", correct: false }
+    ]},
+    { q: "Converting vector shapes into a series of pixels for display is called:", arQ: "تحويل الأشكال المتجهة إلى سلسلة من البكسلات للعرض يسمى:", options: [
+        { en: "Rasterization", ar: "التنقيط", correct: true },
+        { en: "Animation", ar: "التحريك", correct: false },
+        { en: "Rigging", ar: "التجهيز", correct: false },
+        { en: "Simulation", ar: "المحاكاة", correct: false }
+    ]},
+    { q: "The color model used for physical printing (not screens) is:", arQ: "نموذج الألوان المستخدم للطباعة الفعلية (وليس الشاشات) هو:", options: [
+        { en: "RGB", ar: "RGB", correct: false },
+        { en: "CMYK", ar: "CMYK", correct: true },
+        { en: "HSL", ar: "HSL", correct: false },
+        { en: "HEX", ar: "HEX", correct: false }
+    ]},
+    { q: "In RGB, what color do you get with (0, 255, 0)?", arQ: "في نظام RGB، ما هو اللون الذي تحصل عليه من (0, 255, 0)؟", options: [
+        { en: "Red", ar: "أحمر", correct: false },
+        { en: "Blue", ar: "أزرق", correct: false },
+        { en: "Green", ar: "أخضر", correct: true },
+        { en: "Yellow", ar: "أصفر", correct: false }
+    ]},
+    { q: "Which graphics technique models how light bounces off surfaces?", arQ: "أي تقنية رسومية تحاكي كيفية ارتداد الضوء عن الأسطح؟", options: [
+        { en: "Collision", ar: "التصادم", correct: false },
+        { en: "Global Illumination", ar: "الإضاءة العالمية", correct: true },
+        { en: "Input Handling", ar: "التعامل مع المدخلات", correct: false },
+        { en: "Scripting", ar: "البرمجة النصية", correct: false }
+    ]},
+    { q: "A 4:3 aspect ratio is typically found in:", arQ: "نسبة الجوانب 4:3 توجد عادة في:", options: [
+        { en: "Modern Cinemas", ar: "السينما الحديثة", correct: false },
+        { en: "Older TV Monitors", ar: "شاشات التلفاز القديمة", correct: true },
+        { en: "Ultra-wide Smartphones", ar: "الهواتف الذكية العريضة جداً", correct: false },
+        { en: "IMAX Theaters", ar: "مسارح IMAX", correct: false }
+    ]},
+    { q: "The total number of pixels for a resolution is found by:", arQ: "العدد الإجمالي للبكسلات في دقة معينة يتم إيجاده عن طريق:", options: [
+        { en: "Adding width and height", ar: "جمع العرض والارتفاع", correct: false },
+        { en: "Dividing width by height", ar: "قسمة العرض على الارتفاع", correct: false },
+        { en: "Multiplying width by height", ar: "ضرب العرض في الارتفاع", correct: true },
+        { en: "Subtracting height from width", ar: "طرح الارتفاع من العرض", correct: false }
+    ]},
+
+    // Section 2: Listings & Tasks (Q1-Q15 converted to MCQ format)
+    { q: "Which of the following is NOT a main task performed by Game Engines?", arQ: "أي مما يلي ليس من المهام الرئيسية التي يقوم بها محرك الألعاب؟", options: [
+        { en: "Rendering graphics", ar: "صيرورة الرسوميات", correct: false },
+        { en: "Managing game states", ar: "إدارة حالات اللعبة", correct: false },
+        { en: "Handling player input", ar: "التعامل مع مدخلات اللاعب", correct: false },
+        { en: "Cooking food for the team", ar: "طبخ الطعام للفريق", correct: true }
+    ]},
+    { q: "Common types of Game Programming include 2D, 3D, Physics, and:", arQ: "أنواع برمجة الألعاب الشائعة تشمل 2D و 3D والفيزياء و:", options: [
+        { en: "AI (Artificial Intelligence)", ar: "الذكاء الاصطناعي", correct: true },
+        { en: "Biology", ar: "الأحياء", correct: false },
+        { en: "Accounting", ar: "المحاسبة", correct: false },
+        { en: "Social Studies", ar: "الدراسات الاجتماعية", correct: false }
+    ]},
+    { q: "Which programming language is commonly used in game development?", arQ: "أي لغة برمجة تستخدم عادة في تطوير الألعاب؟", options: [
+        { en: "C++, C#, Java, Python, JavaScript", ar: "C++, C#, Java, Python, JavaScript", correct: true },
+        { en: "Only Arabic", ar: "اللغة العربية فقط", correct: false },
+        { en: "Morse Code", ar: "شفرة مورس", correct: false },
+        { en: "None of these", ar: "لا شيء مما سبق", correct: false }
+    ]},
+    { q: "The Game Production Pipeline stages are: Concept, Pre-production, Production, and:", arQ: "مراحل خط إنتاج اللعبة هي: المفهوم، ما قبل الإنتاج، الإنتاج، و:", options: [
+        { en: "Post-production", ar: "ما بعد الإنتاج", correct: true },
+        { en: "Sleeping", ar: "النوم", correct: false },
+        { en: "Deleting the game", ar: "حذف اللعبة", correct: false },
+        { en: "Shopping", ar: "التسوق", correct: false }
+    ]},
+    { q: "Benefits of being a Game Programmer include:", arQ: "فوائد كونك مبرمج ألعاب تشمل:", options: [
+        { en: "Creative expression and high demand", ar: "التعبير الإبداعي والطلب المرتفع", correct: true },
+        { en: "Getting free pizza every hour", ar: "الحصول على بيتزا مجانية كل ساعة", correct: false },
+        { en: "No need to learn anything", ar: "عدم الحاجة لتعلم أي شيء", correct: false },
+        { en: "Playing games all day without work", ar: "لعب الألعاب طوال اليوم دون عمل", correct: false }
+    ]},
+    { q: "Game Rules must be: Fixed, Binding, Clear, and:", arQ: "قواعد اللعبة يجب أن تكون: ثابتة، ملزمة، واضحة، و:", options: [
+        { en: "Repeatable", ar: "قابلة للتكرار", correct: true },
+        { en: "Random", ar: "عشوائية", correct: false },
+        { en: "Invisible", ar: "غير مرئية", correct: false },
+        { en: "Optional", ar: "اختيارية", correct: false }
+    ]},
+    { q: "Types of 'Game Feelings' (Aesthetics) include Challenge, Discovery, and:", arQ: "أنواع 'أحاسيس اللعبة' تشمل التحدي، الاكتشاف، و:", options: [
+        { en: "Fellowship, Expression, Submission", ar: "الزمالة، التعبير، الخضوع", correct: true },
+        { en: "Hunger", ar: "الجوع", correct: false },
+        { en: "Coldness", ar: "البرودة", correct: false },
+        { en: "Sleepiness", ar: "النعاس", correct: false }
+    ]},
+    { q: "Newton's Three Laws of Motion applied in games are Inertia, Acceleration, and:", arQ: "قوانين نيوتن الثلاثة للحركة المطبقة في الألعاب هي القصور الذاتي، التسارع، و:", options: [
+        { en: "Action and Reaction", ar: "الفعل ورد الفعل", correct: true },
+        { en: "Cooking and Eating", ar: "الطبخ والأكل", correct: false },
+        { en: "Reading and Writing", ar: "القراءة والكتابة", correct: false },
+        { en: "Fast and Furious", ar: "السرعة والغضب", correct: false }
+    ]},
+    { q: "Types of Physics Simulations include Rigid body, Soft body, Cloth, and:", arQ: "أنواع المحاكاة الفيزيائية تشمل الجسم الصلب، الجسم اللين، القماش، و:", options: [
+        { en: "Fluid dynamics", ar: "ديناميكا السوائل", correct: true },
+        { en: "Ghost dynamics", ar: "ديناميكا الأشباح", correct: false },
+        { en: "Magic simulation", ar: "محاكاة السحر", correct: false },
+        { en: "Dream simulation", ar: "محاكاة الأحلام", correct: false }
+    ]},
+    { q: "Popular Physics Engines include Havok, PhysX, and:", arQ: "محركات الفيزياء الشهيرة تشمل Havok و PhysX و:", options: [
+        { en: "Bullet", ar: "Bullet", correct: true },
+        { en: "Arrow", ar: "سهم", correct: false },
+        { en: "Sword", ar: "سيف", correct: false },
+        { en: "Shield", ar: "درع", correct: false }
+    ]},
+    { q: "The primary colors in the RGB model are:", arQ: "الألوان الأساسية في نظام RGB هي:", options: [
+        { en: "Red, Green, Blue", ar: "الأحمر، الأخضر، الأزرق", correct: true },
+        { en: "Black, White, Gray", ar: "الأسود، الأبيض، الرمادي", correct: false },
+        { en: "Orange, Purple, Pink", ar: "البرتقالي، البنفسجي، الوردي", correct: false },
+        { en: "Cyan, Magenta, Yellow", ar: "السيان، الأرجواني، الأصفر", correct: false }
+    ]},
+    { q: "What does the 'K' in CMYK stand for?", arQ: "إلى ماذا يرمز حرف 'K' في نظام CMYK؟", options: [
+        { en: "Key (Black)", ar: "مفتاح (أسود)", correct: true },
+        { en: "Kangaroo", ar: "كنغر", correct: false },
+        { en: "Kind", ar: "لطيف", correct: false },
+        { en: "King", ar: "ملك", correct: false }
+    ]},
+    { q: "A Full HD screen resolution is:", arQ: "دقة شاشة Full HD هي:", options: [
+        { en: "1920 x 1080", ar: "1920 x 1080", correct: true },
+        { en: "800 x 600", ar: "800 x 600", correct: false },
+        { en: "4000 x 2000", ar: "4000 x 2000", correct: false },
+        { en: "100 x 100", ar: "100 x 100", correct: false }
+    ]},
+    { q: "Algorithms for Global Illumination include Ray tracing, Radiosity, and:", arQ: "خوارزميات الإضاءة العالمية تشمل تتبع الأشعة، الإشعاع، و:", options: [
+        { en: "Photon mapping", ar: "رسم خرائط الفوتون", correct: true },
+        { en: "Map drawing", ar: "رسم الخرائط", correct: false },
+        { en: "Photo taking", ar: "التقاط الصور", correct: false },
+        { en: "Light switching", ar: "تبديل الضوء", correct: false }
+    ]},
+    { q: "Common Aspect Ratios include 4:3 (Traditional) and:", arQ: "نسب الجوانب الشائعة تشمل 4:3 (تقليدي) و:", options: [
+        { en: "16:9 (Widescreen), 21:9 (Ultrawide)", ar: "16:9 (شاشة عريضة)، 21:9 (عريضة جداً)", correct: true },
+        { en: "1:100", ar: "1:100", correct: false },
+        { en: "0:0", ar: "0:0", correct: false },
+        { en: "99:1", ar: "99:1", correct: false }
+    ]},
+
+    // Section 3: Comparisons (Q16-Q22)
+    { q: "2D Programming focuses on X and Y axes, while 3D Programming involves:", arQ: "البرمجة ثنائية الأبعاد تركز على محوري X و Y، بينما البرمجة ثلاثية الأبعاد تتضمن:", options: [
+        { en: "X, Y, and Z axes", ar: "محاور X و Y و Z", correct: true },
+        { en: "Only the Z axis", ar: "محور Z فقط", correct: false },
+        { en: "No axes at all", ar: "لا توجد محاور على الإطلاق", correct: false },
+        { en: "Time travel", ar: "السفر عبر الزمن", correct: false }
+    ]},
+    { q: "Gameplay is the overall experience, whereas Game Mechanics are:", arQ: "أسلوب اللعب هو التجربة الكلية، في حين أن ميكانيكا اللعبة هي:", options: [
+        { en: "Specific rules and technical systems", ar: "القواعد المحددة والأنظمة التقنية", correct: true },
+        { en: "The box the game comes in", ar: "العلبة التي تأتي فيها اللعبة", correct: false },
+        { en: "The price of the game", ar: "سعر اللعبة", correct: false },
+        { en: "The advertisements", ar: "الإعلانات", correct: false }
+    ]},
+    { q: "Rigid Body Dynamics is for solid objects, while Soft Body Dynamics simulates:", arQ: "ديناميكا الأجسام الصلبة للأجسام المتينة، بينما ديناميكا الأجسام اللينة تحاكي:", options: [
+        { en: "Objects that deform on impact", ar: "الأجسام التي يتغير شكلها عند التصادم", correct: true },
+        { en: "Ghosts", ar: "الأشباح", correct: false },
+        { en: "Rocks", ar: "الصخور", correct: false },
+        { en: "Steel bars", ar: "قضبان الصلب", correct: false }
+    ]},
+    { q: "Fluid Dynamics is for liquids/gases, whereas Cloth Simulation simulates:", arQ: "ديناميكا السوائل للسوائل والغازات، بينما محاكاة القماش تحاكي:", options: [
+        { en: "Fabric behavior (capes, flags)", ar: "سلوك الأقمشة (الأوشحة، الأعلام)", correct: true },
+        { en: "Hard plastic", ar: "البلاستيك الصلب", correct: false },
+        { en: "Stone walls", ar: "الجدران الحجرية", correct: false },
+        { en: "Engine oil", ar: "زيت المحرك", correct: false }
+    ]},
+    { q: "RGB is for digital screens, while CMYK is for:", arQ: "نظام RGB للشاشات الرقمية، بينما CMYK لـ:", options: [
+        { en: "Physical printing", ar: "الطباعة الفعلية", correct: true },
+        { en: "Radio signals", ar: "إشارات الراديو", correct: false },
+        { en: "Eye surgery", ar: "جراحة العيون", correct: false },
+        { en: "Night vision", ar: "الرؤية الليلية", correct: false }
+    ]},
+    { q: "Ray Tracing is realistic but slow, while Rasterization is:", arQ: "تتبع الأشعة واقعي ولكنه بطيء، بينما التنقيط (Rasterization) هو:", options: [
+        { en: "Faster and standard for real-time rendering", ar: "أسرع ومعياري للمعالجة في الوقت الفعلي", correct: true },
+        { en: "Even slower", ar: "أبطأ بكثير", correct: false },
+        { en: "Used only for books", ar: "يستخدم فقط للكتب", correct: false },
+        { en: "Impossible to use", ar: "مستحيل الاستخدام", correct: false }
+    ]},
+    { q: "Pre-production involves planning, while Post-production focuses on:", arQ: "مرحلة ما قبل الإنتاج تتضمن التخطيط، بينما ما بعد الإنتاج تركز على:", options: [
+        { en: "Fixing bugs and releasing updates", ar: "إصلاح الأخطاء وإصدار التحديثات", correct: true },
+        { en: "Deleting the game code", ar: "حذف كود اللعبة", correct: false },
+        { en: "Starting from scratch", ar: "البدء من الصفر", correct: false },
+        { en: "Changing the team name", ar: "تغيير اسم الفريق", correct: false }
+    ]}
+];
+
+let score = 0;
+const container = document.getElementById('quiz-container');
+
+function renderQuiz() {
+    questions.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `
+            <button class="translate-btn" onclick="toggleTranslation(${index})">Translate / ترجمة</button>
+            <div id="trans-${index}" class="translation-area"><strong>السؤال:</strong> ${q.arQ}</div>
+            <div class="q-text">${index + 1}. ${q.q}</div>
+            <div id="options-${index}">
+                ${q.options.map((opt, optIdx) => `
+                    <button class="option" onclick="checkAnswer(${index}, ${optIdx}, this, ${opt.correct})">
+                        <span>${opt.en}</span>
+                        <span class="ar-opt">${opt.ar}</span>
+                    </button>
+                `).join('')}
+            </div>
+            <div id="result-${index}" class="result-msg"></div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+window.checkAnswer = function(qIdx, optIdx, btn, isCorrect) {
+    const parent = document.getElementById(`options-${qIdx}`);
+    if (parent.dataset.answered === "true") return;
+    parent.dataset.answered = "true";
+
+    const allOptions = parent.querySelectorAll('.option');
+    const resultMsg = document.getElementById(`result-${qIdx}`);
+    const correctOpt = questions[qIdx].options.find(o => o.correct);
+
+    allOptions.forEach(opt => {
+        opt.querySelector('.ar-opt').style.display = 'block';
+    });
+
+    if (isCorrect) {
+        score++;
+        btn.classList.add('correct');
+        resultMsg.innerHTML = `<span style="color: green;">✅ إجابة صحيحة: ${correctOpt.ar}</span>`;
+    } else {
+        btn.classList.add('wrong');
+        allOptions.forEach(opt => {
+             if (opt.innerHTML.includes(correctOpt.en)) opt.classList.add('correct');
+        });
+        resultMsg.innerHTML = `<span style="color: red;">❌ إجابة خاطئة! الصحيح هو: ${correctOpt.en} (${correctOpt.ar})</span>`;
+    }
+    document.getElementById('scoreBox').innerText = `النتيجة: ${score} / ${questions.length}`;
+};
+
+window.toggleTranslation = function(index) {
+    const area = document.getElementById(`trans-${index}`);
+    const optionsAr = document.querySelectorAll(`#options-${index} .ar-opt`);
+    
+    if (area.style.display === 'block') {
+        area.style.display = 'none';
+        optionsAr.forEach(o => o.style.display = 'none');
+    } else {
+        area.style.display = 'block';
+        optionsAr.forEach(o => o.style.display = 'block');
+    }
+};
+
+renderQuiz();
+</script>
+</body>
+</html>
